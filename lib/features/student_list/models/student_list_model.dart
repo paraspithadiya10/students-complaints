@@ -7,10 +7,15 @@ class StudentListModel {
 
   StudentListModel({this.isLoading, this.students, this.filteredList});
 
-  StudentListModel copyWith({bool? isLoading, List<Student>? students}) {
+  StudentListModel copyWith({
+    bool? isLoading,
+    List<Student>? students,
+    List<Student>? filteredList,
+  }) {
     return StudentListModel(
       isLoading: isLoading ?? this.isLoading,
       students: students ?? this.students,
+      filteredList: filteredList ?? this.filteredList,
     );
   }
 }
