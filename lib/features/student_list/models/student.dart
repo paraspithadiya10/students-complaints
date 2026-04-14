@@ -15,6 +15,28 @@ class Student {
     required this.mobileNo,
   });
 
+  factory Student.fromJson(Map<String, dynamic> json) {
+    return Student(
+      id: json['id'],
+      spuId: json['spu_id'],
+      stream: json['stream'],
+      name: json['name'],
+      fatherName: json['father_name'],
+      mobileNo: json['mobile_no'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'spu_id': spuId,
+      'stream': stream,
+      'name': name,
+      'father_name': fatherName,
+      'mobile_no': mobileNo,
+    };
+  }
+
   Student copyWith({
     int? id,
     int? spuId,

@@ -1,11 +1,11 @@
 import 'package:complaints/features/student_list/models/student.dart';
 
 class StudentListModel {
-  bool? isLoading;
+  bool isLoading;
   List<Student>? students;
   List<Student>? filteredList;
 
-  StudentListModel({this.isLoading, this.students, this.filteredList});
+  StudentListModel({this.isLoading = false, this.students, this.filteredList});
 
   StudentListModel copyWith({
     bool? isLoading,
