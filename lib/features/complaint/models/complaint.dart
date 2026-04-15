@@ -1,10 +1,13 @@
+import 'package:complaints/common/utils/enum_utils.dart';
+import 'package:complaints/common/utils/extension_utils.dart';
+
 class Complaint {
   final int id;
   final int studentId;
   final String complaint;
   final String reportedBy;
   final DateTime complaintDate;
-  final String severity;
+  final ComplaintSeverity severity;
 
   Complaint({
     required this.id,
@@ -22,7 +25,7 @@ class Complaint {
       complaint: json['complaint'],
       reportedBy: json['reported_by'],
       complaintDate: DateTime.parse(json['complaint_date']),
-      severity: json['severity'],
+      severity: ComplaintSeverityExtension.fromJson(json['severity']),
     );
   }
 

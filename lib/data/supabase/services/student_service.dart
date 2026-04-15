@@ -35,7 +35,7 @@ class StudentService {
     try {
       final response = await supabase.rpc(
         'get_student_complaints',
-        params: {'p_student_id': 1},
+        params: {'p_student_id': id},
       );
 
       debugPrint('complaints list : $response');

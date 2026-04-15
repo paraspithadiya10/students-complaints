@@ -1,3 +1,4 @@
+import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:flutter/material.dart';
 
 class CommonUtils {
@@ -29,5 +30,18 @@ class CommonUtils {
   static bool isKeyboardOpen(BuildContext context) {
     final viewInsets = MediaQuery.of(context).viewInsets;
     return viewInsets.bottom > 0;
+  }
+
+  static Color getColor(ComplaintSeverity severity) {
+    switch (severity) {
+      case ComplaintSeverity.high:
+        return Colors.red;
+
+      case ComplaintSeverity.medium:
+        return Colors.orange;
+
+      case ComplaintSeverity.low:
+        return Colors.green;
+    }
   }
 }

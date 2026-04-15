@@ -5,6 +5,9 @@ class Student {
   final String name;
   final String fatherName;
   final int mobileNo;
+  final int highCount;
+  final int mediumCount;
+  final int lowCount;
 
   Student({
     required this.id,
@@ -13,6 +16,9 @@ class Student {
     required this.name,
     required this.fatherName,
     required this.mobileNo,
+    required this.highCount,
+    required this.mediumCount,
+    required this.lowCount,
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
@@ -23,18 +29,10 @@ class Student {
       name: json['name'],
       fatherName: json['father_name'],
       mobileNo: json['mobile_no'],
+      highCount: json['high_count'],
+      mediumCount: json['medium_count'],
+      lowCount: json['low_count'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'spu_id': spuId,
-      'stream': stream,
-      'name': name,
-      'father_name': fatherName,
-      'mobile_no': mobileNo,
-    };
   }
 
   Student copyWith({
@@ -44,6 +42,9 @@ class Student {
     String? name,
     String? fatherName,
     int? mobileNo,
+    int? highCount,
+    int? mediumCount,
+    int? lowCount,
   }) {
     return Student(
       id: id ?? this.id,
@@ -52,6 +53,9 @@ class Student {
       name: name ?? this.name,
       fatherName: fatherName ?? this.fatherName,
       mobileNo: mobileNo ?? this.mobileNo,
+      highCount: highCount ?? this.highCount,
+      mediumCount: mediumCount ?? this.mediumCount,
+      lowCount: lowCount ?? this.lowCount,
     );
   }
 }

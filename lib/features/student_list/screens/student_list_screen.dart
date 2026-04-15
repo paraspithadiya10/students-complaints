@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:complaints/common/widgets/max_width_widget.dart';
+import 'package:complaints/common/widgets/state_widgets/empty_state_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_search_bar_widget.dart';
 import 'package:complaints/features/student_list/providers/student_list_controller_provider.dart';
@@ -71,7 +72,16 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
             ),
             const SizedBox(height: 10),
             if (state.isLoading) ...[
+              Spacer(),
               Center(child: CircularProgressIndicator()),
+              Spacer(),
+            ] else if (state.students!.isEmpty) ...[
+              Spacer(),
+              EmptyStateWidget(
+                icon: Icons.school_outlined,
+                message: 'No Students Found !!',
+              ),
+              Spacer(),
             ] else
               Expanded(
                 child: ListView.builder(

@@ -1,22 +1,25 @@
 import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
+import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/features/complaint/utils/enum_utils.dart';
 import 'package:complaints/features/student_detail/widgets/students_info_widget.dart';
 import 'package:complaints/features/student_list/models/student.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ComplaintScreen extends StatefulWidget {
+class ComplaintScreen extends ConsumerStatefulWidget {
   final Student student;
 
   const ComplaintScreen({super.key, required this.student});
 
   @override
-  State<ComplaintScreen> createState() => _ComplaintScreenState();
+  ConsumerState<ComplaintScreen> createState() => _ComplaintScreenState();
 }
 
-class _ComplaintScreenState extends State<ComplaintScreen> {
+class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
   final reportedBy = TextEditingController();
   final complaint = TextEditingController();
   Severity? selectedSeverity;
@@ -106,12 +109,17 @@ class _ComplaintScreenState extends State<ComplaintScreen> {
                         ),
                       ),
                     );
+
+                    context.pushReplacementNamed(
+                      AppRoutes.studentDetail.name,
+                      extra: widget.student,
+                    );
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.red,
                         content: Text(
-                          'Error: $e',
+                          'Error while submitting complaint: $e',
                           style: Theme.of(
                             context,
                           ).textTheme.labelLarge!.copyWith(color: Colors.white),

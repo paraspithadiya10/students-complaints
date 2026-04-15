@@ -110,7 +110,76 @@ class StudentItemWidget extends ConsumerWidget {
         if (!isCompact) ...[
           const SizedBox(height: 4),
           Text(
-            student.stream,
+            student.spuId.toString(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+              height: 1.3,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          _buildComplaintCount(theme),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildComplaintCount(ThemeData theme) {
+    return Row(
+      spacing: 5,
+      children: [
+        if (student.highCount > 0) ...[
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          Text(
+            student.highCount.toString(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+              height: 1.3,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(width: 5),
+        ],
+        if (student.mediumCount > 0) ...[
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          Text(
+            student.mediumCount.toString(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+              height: 1.3,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(width: 5),
+        ],
+        if (student.lowCount > 0) ...[
+          Container(
+            height: 10,
+            width: 10,
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          Text(
+            student.lowCount.toString(),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               height: 1.3,
