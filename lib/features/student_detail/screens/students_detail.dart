@@ -28,7 +28,7 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(complaintListControllerProvider.notifier)
-          .getComplaintList(widget.student.id);
+          .getComplaintList(widget.student.spuId);
     });
   }
 

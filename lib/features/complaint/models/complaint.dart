@@ -3,7 +3,7 @@ import 'package:complaints/common/utils/extension_utils.dart';
 
 class Complaint {
   final int id;
-  final int studentId;
+  final int spuId;
   final String complaint;
   final String reportedBy;
   final DateTime complaintDate;
@@ -11,7 +11,7 @@ class Complaint {
 
   Complaint({
     required this.id,
-    required this.studentId,
+    required this.spuId,
     required this.complaint,
     required this.reportedBy,
     required this.complaintDate,
@@ -21,10 +21,11 @@ class Complaint {
   factory Complaint.fromJson(Map<String, dynamic> json) {
     return Complaint(
       id: json['id'],
-      studentId: json['student_id'],
+      spuId: json['spu_id'],
       complaint: json['complaint'],
       reportedBy: json['reported_by'],
       complaintDate: DateTime.parse(json['complaint_date']),
+
       severity: ComplaintSeverityExtension.fromJson(json['severity']),
     );
   }
@@ -32,11 +33,11 @@ class Complaint {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'student_id': studentId,
+      'spu_id': spuId,
       'complaint': complaint,
       'reported_by': reportedBy,
       'complaint_date': complaintDate.toIso8601String(),
-      'severity': severity,
+      'severity': severity.name,
     };
   }
 }

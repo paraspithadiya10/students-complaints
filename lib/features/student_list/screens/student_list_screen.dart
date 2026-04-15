@@ -52,6 +52,7 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
 
   Widget _buildBody(BuildContext context) {
     final state = ref.watch(studentListControllerProvider);
+    final students = state.students ?? [];
 
     return SafeArea(
       child: MaxWidthWidget(
@@ -75,7 +76,7 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
               Spacer(),
               Center(child: CircularProgressIndicator()),
               Spacer(),
-            ] else if (state.students!.isEmpty) ...[
+            ] else if ((state.students ?? []).isEmpty) ...[
               Spacer(),
               EmptyStateWidget(
                 icon: Icons.school_outlined,
@@ -87,8 +88,8 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
                 child: ListView.builder(
                   itemCount: state.students?.length,
                   itemBuilder: (context, index) {
-                    final student = state.students?[index];
-                    return StudentItemWidget(student: student!);
+                    final student = students[index];
+                    return StudentItemWidget(student: student);
                   },
                 ),
               ),

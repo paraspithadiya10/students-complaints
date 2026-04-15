@@ -89,7 +89,7 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                     await supabase.rpc(
                       'add_complaint',
                       params: {
-                        'p_student_id': widget.student.id,
+                        'p_student_id': widget.student.spuId,
                         'p_complaint': complaint.text,
                         'p_reported_by': reportedBy.text,
                         'p_severity': selectedSeverity?.name,

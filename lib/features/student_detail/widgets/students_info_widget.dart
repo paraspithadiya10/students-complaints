@@ -65,7 +65,7 @@ class StudentsInfoWidget extends StatelessWidget {
             spacing: 5,
             children: [
               Text('SPU ID : ${student.spuId}'),
-              Text('Father Name : ${student.fatherName}'),
+              Text('Father Name : ${student.name}'),
               Text('Contact No : ${student.mobileNo}'),
               SizedBox(height: 10),
               if (showButton)
