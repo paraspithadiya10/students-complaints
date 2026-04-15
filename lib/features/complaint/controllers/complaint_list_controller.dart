@@ -1,31 +1,30 @@
 import 'package:complaints/common/models/response_model.dart';
-import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:complaints/data/supabase/services/student_service.dart';
-import 'package:complaints/features/student_list/models/student_list_model.dart';
+import 'package:complaints/features/complaint/models/complaint_list_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StudentListController extends Notifier<StudentListModel> {
+class ComplaintListController extends Notifier<ComplaintListModel> {
   @override
-  StudentListModel build() => StudentListModel();
+  ComplaintListModel build() => ComplaintListModel();
 
   // Student service
   final _studentService = StudentService();
 
-  Future<void> getStudentList(StreamType stream, [String? search]) async {
+  Future<void> getComplaintList(int id) async {
     setLoading(true);
     try {
-      final response = await _studentService.getStudentList(stream, search);
+      final response = await _studentService.getComplaintList(id);
 
       if (response.type != ResponseType.success) {
         setLoading(false);
-        debugPrint('Failed to fetch student list');
+        debugPrint('Failed to fetch complaints');
         return;
       }
 
-      state = state.copyWith(students: response.data);
+      state = state.copyWith(complaints: response.data);
     } catch (e) {
-      debugPrint('Failed to fetch student list : ${e.toString()}');
+      debugPrint('Failed to fetch complaints : ${e.toString()}');
     } finally {
       setLoading(false);
     }

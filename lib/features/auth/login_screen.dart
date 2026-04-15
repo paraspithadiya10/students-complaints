@@ -6,12 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
+  bool isPasswordVisible = false;
   final supabase = Supabase.instance.client;
 
   Future<void> login(BuildContext context) async {
@@ -56,12 +61,36 @@ class LoginScreen extends StatelessWidget {
               Image.asset(ImageConstants.appLogo, height: 100, width: 100),
               TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(hintText: 'E-mail'),
+                decoration: const InputDecoration(
+                  hintText: 'E-mail',
+                  prefixIcon: Icon(Icons.email_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                ),
               ),
               TextFormField(
                 controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(hintText: 'Password'),
+                obscureText: !isPasswordVisible,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: Icon(Icons.password_outlined),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                ),
               ),
               ZoePrimaryButton(text: 'Login', onPressed: () => login(context)),
             ],

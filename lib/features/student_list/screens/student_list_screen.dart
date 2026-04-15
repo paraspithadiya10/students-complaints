@@ -41,7 +41,10 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: false, title: ZoeAppBar()),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: ZoeAppBar(title: widget.streamType.name.toUpperCase()),
+      ),
       body: _buildBody(context),
     );
   }
@@ -72,9 +75,9 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
             ] else
               Expanded(
                 child: ListView.builder(
-                  itemCount: state.filteredList?.length,
+                  itemCount: state.students?.length,
                   itemBuilder: (context, index) {
-                    final student = state.filteredList?[index];
+                    final student = state.students?[index];
                     return StudentItemWidget(student: student!);
                   },
                 ),

@@ -1,9 +1,11 @@
 import 'package:complaints/common/widgets/glassy_container_widget.dart';
 import 'package:complaints/common/widgets/styled_content_container_widget.dart';
+import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/core/theme/colors/app_colors.dart';
 import 'package:complaints/features/student_list/models/student.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class StudentItemWidget extends ConsumerWidget {
   final Student student;
@@ -22,7 +24,12 @@ class StudentItemWidget extends ConsumerWidget {
         ? _buildCompactDesign(context, theme, student)
         : _buildExpandedDesign(context, theme, student);
 
-    return GestureDetector(onTap: () {}, child: child);
+    return GestureDetector(
+      onTap: () {
+        context.pushNamed(AppRoutes.studentDetail.name, extra: student);
+      },
+      child: child,
+    );
   }
 
   Widget _buildCompactDesign(

@@ -2,7 +2,9 @@ enum AppRoutes {
   splash('/splash'),
   login('/login'),
   home('/home'),
-  studentList('/studentList');
+  studentList('/studentList'),
+  studentDetail('/studentDetail'),
+  complaint('/complaint');
 
   final String route;
 
