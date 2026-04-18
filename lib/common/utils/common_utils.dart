@@ -44,4 +44,10 @@ class CommonUtils {
         return Colors.green;
     }
   }
+
+  static String getFatherName(String fullName) {
+    final parts = fullName.trim().split(' ');
+    if (parts.length <= 1) return '';
+    return parts.sublist(1).join(' ');
+  }
 }

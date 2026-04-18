@@ -1,3 +1,4 @@
+import 'package:complaints/common/utils/common_utils.dart';
 import 'package:complaints/common/widgets/styled_content_container_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
 import 'package:complaints/core/routing/app_routes.dart';
@@ -66,7 +67,7 @@ class StudentsInfoWidget extends ConsumerWidget {
             spacing: 5,
             children: [
               Text('SPU ID : ${student.spuId}'),
-              Text('Father Name : ${student.name}'),
+              Text('Father Name : ${CommonUtils.getFatherName(student.name)}'),
               Text('Contact No : ${student.mobileNo}'),
               SizedBox(height: 10),
               if (showButton)
