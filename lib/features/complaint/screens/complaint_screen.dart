@@ -2,9 +2,11 @@ import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
 import 'package:complaints/core/routing/app_routes.dart';
+import 'package:complaints/features/complaint/providers/complaint_list_controller_provider.dart';
 import 'package:complaints/features/complaint/utils/enum_utils.dart';
 import 'package:complaints/features/student_detail/widgets/students_info_widget.dart';
 import 'package:complaints/features/student_list/models/student.dart';
+import 'package:complaints/features/student_list/providers/student_list_controller_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -89,7 +91,7 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                     await supabase.rpc(
                       'add_complaint',
                       params: {
-                        'p_student_id': widget.student.spuId,
+                        'p_spu_id': widget.student.spuId,
                         'p_complaint': complaint.text,
                         'p_reported_by': reportedBy.text,
                         'p_severity': selectedSeverity?.name,
@@ -110,11 +112,12 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                       ),
                     );
 
-                    context.pushReplacementNamed(
-                      AppRoutes.studentDetail.name,
-                      extra: widget.student,
-                    );
+                    ref
+                        .read(complaintListControllerProvider.notifier)
+                        .getComplaintList(widget.student.spuId);
+                    context.pop();
                   } catch (e) {
+                    debugPrint('Error while creating complaints : $e');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.red,

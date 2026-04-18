@@ -4,9 +4,10 @@ import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/core/theme/colors/app_colors.dart';
 import 'package:complaints/features/student_list/models/student.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class StudentsInfoWidget extends StatelessWidget {
+class StudentsInfoWidget extends ConsumerWidget {
   final Student student;
   final bool showButton;
 
@@ -17,7 +18,7 @@ class StudentsInfoWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final color = AppColors.gradientEnd;
 

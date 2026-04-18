@@ -12,7 +12,7 @@ class StudentListController extends Notifier<StudentListModel> {
   // Student service
   final _studentService = StudentService();
 
-  Future<void> getStudentList(StreamType stream, [String? search]) async {
+  Future<void> getStudentList(String stream, [String? search]) async {
     setLoading(true);
     try {
       final response = await _studentService.getStudentList(stream, search);

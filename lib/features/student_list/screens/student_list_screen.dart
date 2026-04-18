@@ -29,7 +29,7 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(studentListControllerProvider.notifier)
-          .getStudentList(widget.streamType);
+          .getStudentList(widget.streamType.name);
     });
   }
 
@@ -67,7 +67,7 @@ class _StudentListScreenState extends ConsumerState<StudentListScreen> {
                 _debounce = Timer(const Duration(milliseconds: 500), () {
                   ref
                       .read(studentListControllerProvider.notifier)
-                      .getStudentList(widget.streamType, value);
+                      .getStudentList(widget.streamType.name, value);
                 });
               },
             ),

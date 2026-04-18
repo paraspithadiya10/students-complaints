@@ -25,7 +25,6 @@ class Complaint {
       complaint: json['complaint'],
       reportedBy: json['reported_by'],
       complaintDate: DateTime.parse(json['complaint_date']),
-
       severity: ComplaintSeverityExtension.fromJson(json['severity']),
     );
   }

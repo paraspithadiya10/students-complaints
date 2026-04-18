@@ -10,13 +10,13 @@ class StudentService {
   final supabase = Supabase.instance.client;
 
   Future<ResponseModel> getStudentList(
-    StreamType stream,
+    String stream,
     String? searchText,
   ) async {
     try {
       final response = await supabase.rpc(
         'get_students_by_stream',
-        params: {'p_stream': stream.name, 'p_search': searchText},
+        params: {'p_stream': stream, 'p_search': searchText},
       );
 
       debugPrint('Students list : $response');
@@ -35,7 +35,7 @@ class StudentService {
     try {
       final response = await supabase.rpc(
         'get_student_complaints',
-        params: {'p_student_id': id},
+        params: {'p_spu_id': id},
       );
 
       debugPrint('complaints list : $response');
