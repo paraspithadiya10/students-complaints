@@ -1,3 +1,4 @@
+import 'package:complaints/common/providers/profile_controller_provider.dart';
 import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
@@ -20,12 +21,12 @@ class ComplaintScreen extends ConsumerStatefulWidget {
 }
 
 class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
-  final reportedBy = TextEditingController();
   final complaint = TextEditingController();
   Severity? selectedSeverity;
 
   @override
   Widget build(BuildContext context) {
+    final profile = ref.read(profileControllerProvider);
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false, title: ZoeAppBar()),
       body: SafeArea(
@@ -36,15 +37,7 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
             spacing: 20,
             children: [
               StudentsInfoWidget(student: widget.student, showButton: false),
-              TextFormField(
-                controller: reportedBy,
-                decoration: const InputDecoration(
-                  hintText: "professor name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                ),
-              ),
+
               TextFormField(
                 controller: complaint,
                 minLines: 5,
@@ -91,7 +84,7 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                       params: {
                         'p_spu_id': widget.student.spuId,
                         'p_complaint': complaint.text,
-                        'p_reported_by': reportedBy.text,
+                        'p_reported_by': profile.username,
                         'p_severity': selectedSeverity?.name,
                       },
                     );

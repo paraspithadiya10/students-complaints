@@ -1,19 +1,23 @@
+import 'package:complaints/common/providers/profile_controller_provider.dart';
+import 'package:complaints/common/utils/pref_keys.dart';
 import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_primary_button.dart';
 import 'package:complaints/core/constants/image_constants.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
@@ -32,6 +36,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Login successful')));
+
+        final currentUser = supabase.auth.currentUser;
+
+        ref
+            .read(profileControllerProvider.notifier)
+            .getProfile(currentUser?.id ?? '');
+
+        final pref = await SharedPreferences.getInstance();
+
+        pref.setBool(isLoggedIn, true);
+
+        if (!context.mounted) return;
 
         context.go(AppRoutes.home.route);
       }
