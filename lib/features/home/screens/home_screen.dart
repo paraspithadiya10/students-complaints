@@ -1,39 +1,119 @@
-import 'package:complaints/common/utils/pref_keys.dart';
+import 'dart:async';
+import 'package:complaints/common/models/profile_model.dart';
+import 'package:complaints/common/providers/profile_controller_provider.dart';
+import 'package:complaints/common/widgets/max_width_widget.dart';
+import 'package:complaints/common/widgets/state_widgets/empty_state_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
-import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
+import 'package:complaints/common/widgets/toolkit/zoe_icon_button_widget.dart';
+import 'package:complaints/common/widgets/toolkit/zoe_search_bar_widget.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/features/home/widgets/stats_section_widget.dart';
+import 'package:complaints/features/student_list/providers/student_list_controller_provider.dart';
+import 'package:complaints/features/student_list/widgets/student_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final TextEditingController searchController = TextEditingController();
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    final profileState = ref.read(profileControllerProvider);
+    if (profileState.stream?.name != 'master') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref
+            .read(studentListControllerProvider.notifier)
+            .getStudentList(profileState.stream!.name);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final profileState = ref.read(profileControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: ZoeAppBar(showBackButton: false, title: 'Streams')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          spacing: 20,
-          children: [
-            StatsSectionWidget(),
-            ZoeSecondaryButton(
-              text: 'Log out',
-              onPressed: () async {
-                final pref = await SharedPreferences.getInstance();
-                pref.setBool(isLoggedIn, false);
-                await Supabase.instance.client.auth.signOut();
-
-                if (!context.mounted) return;
-
-                context.goNamed(AppRoutes.login.name);
+      appBar: AppBar(
+        title: ZoeAppBar(
+          showBackButton: false,
+          title: profileState.stream?.name == 'master' ? 'Streams' : 'Students',
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ZoeIconButtonWidget(
+              icon: Icons.person_2_outlined,
+              onTap: () {
+                context.pushNamed(AppRoutes.profile.name);
               },
-              primaryColor: Colors.red,
             ),
+          ),
+        ],
+      ),
+      body: _buildBody(context, profileState),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, Profile profileState) {
+    final state = ref.watch(studentListControllerProvider);
+
+    final students = state.students ?? [];
+
+    if (profileState.stream?.name == 'master') {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: StatsSectionWidget(),
+      );
+    }
+
+    return SafeArea(
+      child: MaxWidthWidget(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            ZoeSearchBarWidget(
+              controller: searchController,
+              onChanged: (value) {
+                _debounce?.cancel();
+                _debounce = Timer(const Duration(milliseconds: 500), () {
+                  ref
+                      .read(studentListControllerProvider.notifier)
+                      .getStudentList(profileState.stream!.name, value);
+                });
+              },
+            ),
+            const SizedBox(height: 10),
+            if (state.isLoading) ...[
+              Spacer(),
+              Center(child: CircularProgressIndicator()),
+              Spacer(),
+            ] else if ((state.students ?? []).isEmpty) ...[
+              Spacer(),
+              EmptyStateWidget(
+                icon: Icons.school_outlined,
+                message: 'No Students Found !!',
+              ),
+              Spacer(),
+            ] else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.students?.length,
+                  itemBuilder: (context, index) {
+                    final student = students[index];
+                    return StudentItemWidget(student: student);
+                  },
+                ),
+              ),
           ],
         ),
       ),

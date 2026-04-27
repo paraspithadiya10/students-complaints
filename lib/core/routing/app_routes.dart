@@ -4,7 +4,8 @@ enum AppRoutes {
   home('/home'),
   studentList('/studentList'),
   studentDetail('/studentDetail'),
-  complaint('/complaint');
+  complaint('/complaint'),
+  profile('/profile');
 
   final String route;
 

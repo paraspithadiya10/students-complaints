@@ -10,3 +10,16 @@ extension ComplaintSeverityExtension on ComplaintSeverity {
     );
   }
 }
+
+extension StreamTypeExtension on StreamType {
+  static StreamType fromJson(String value) {
+    final normalized = value.trim().toLowerCase();
+
+    return StreamType.values.firstWhere(
+      (e) => e.name.toLowerCase() == normalized,
+      orElse: () => StreamType.master,
+    );
+  }
+
+  String toJson() => name;
+}

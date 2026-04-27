@@ -3,6 +3,7 @@ import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:complaints/features/auth/login_screen.dart';
 import 'package:complaints/features/complaint/screens/complaint_screen.dart';
 import 'package:complaints/features/home/screens/home_screen.dart';
+import 'package:complaints/features/profile/screens/profile_screen.dart';
 import 'package:complaints/features/splash/screens/splash_screen.dart';
 import 'package:complaints/features/student_detail/screens/students_detail.dart';
 import 'package:complaints/features/student_list/models/student.dart';
@@ -64,6 +65,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.complaint.name,
         builder: (context, state) =>
             ComplaintScreen(student: state.extra as Student),
+      ),
+
+      // Profile route
+      GoRoute(
+        path: AppRoutes.profile.route,
+        name: AppRoutes.profile.name,
+        builder: (context, state) => ProfileScreen(),
       ),
     ],
     errorBuilder: (context, state) => const PageNotFoundScreen(),

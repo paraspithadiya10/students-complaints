@@ -27,6 +27,7 @@ class ProfileController extends Notifier<Profile> {
         username: profile.username,
         email: profile.email,
         stream: profile.stream,
+        mobileNo: profile.mobileNo,
         createdAt: profile.createdAt,
       );
     } catch (e) {

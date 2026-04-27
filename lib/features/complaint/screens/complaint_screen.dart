@@ -76,6 +76,23 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
               ZoeSecondaryButton(
                 text: 'Submit',
                 onPressed: () async {
+                  final complaintText = complaint.text.trim();
+
+                  if (complaintText.isEmpty || selectedSeverity == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text(
+                          'Please fill all fields',
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelLarge!.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+
                   final supabase = Supabase.instance.client;
 
                   try {
@@ -83,9 +100,9 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                       'add_complaint',
                       params: {
                         'p_spu_id': widget.student.spuId,
-                        'p_complaint': complaint.text,
+                        'p_complaint': complaintText,
                         'p_reported_by': profile.username,
-                        'p_severity': selectedSeverity?.name,
+                        'p_severity': selectedSeverity!.name,
                       },
                     );
 
@@ -106,9 +123,11 @@ class _ComplaintScreenState extends ConsumerState<ComplaintScreen> {
                     ref
                         .read(complaintListControllerProvider.notifier)
                         .getComplaintList(widget.student.spuId);
+
                     context.pop();
                   } catch (e) {
                     debugPrint('Error while creating complaints : $e');
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.red,

@@ -18,12 +18,16 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
   final supabase = Supabase.instance.client;
 
   Future<void> login(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       final response = await supabase.auth.signInWithPassword(
         email: emailController.text.trim(),
@@ -33,10 +37,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!context.mounted) return;
 
       if (response.user != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Login successful')));
-
         final currentUser = supabase.auth.currentUser;
 
         ref
@@ -47,7 +47,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         pref.setBool(isLoggedIn, true);
 
+        await Future.delayed(const Duration(seconds: 3));
+
         if (!context.mounted) return;
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Login successful')));
 
         context.go(AppRoutes.home.route);
       }
@@ -61,6 +67,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -108,7 +120,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
               ),
-              ZoePrimaryButton(text: 'Login', onPressed: () => login(context)),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : ZoePrimaryButton(
+                      text: 'Login',
+                      onPressed: () => login(context),
+                    ),
             ],
           ),
         ),

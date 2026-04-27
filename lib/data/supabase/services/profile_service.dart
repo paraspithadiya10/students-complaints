@@ -20,6 +20,8 @@ class ProfileService {
       }
 
       final list = response as List<dynamic>;
+      debugPrint('mobile_no value: ${list.first['mobile_no']}');
+      debugPrint('mobile_no type: ${list.first['mobile_no'].runtimeType}');
 
       if (list.isEmpty) {
         return ResponseModel(data: null, type: ResponseType.error);
