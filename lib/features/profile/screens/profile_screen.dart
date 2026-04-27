@@ -73,6 +73,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             TextFormField(
               controller: mobileController,
+              keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
                 hintText: 'Mobile no',
                 prefixIcon: Icon(Icons.call),
