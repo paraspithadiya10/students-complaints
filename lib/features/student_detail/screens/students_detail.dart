@@ -44,7 +44,7 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
           onBackPressed: () {
             ref
                 .read(studentListControllerProvider.notifier)
-                .getStudentList(widget.student.stream);
+                .getStudentList(widget.student.stream.name);
             context.pop();
           },
         ),

@@ -1,7 +1,9 @@
+import 'package:complaints/common/utils/enum_utils.dart';
+
 class Student {
   final int spuId;
   final String enrollmentNo;
-  final String stream;
+  final StreamType stream;
   final String name;
   final int mobileNo;
   final int permanentMobileNo;
@@ -29,7 +31,10 @@ class Student {
     return Student(
       spuId: json['spu_id'],
       enrollmentNo: json['enrollment_no'],
-      stream: json['stream'],
+      stream: StreamType.values.firstWhere(
+        (e) => e.name.toLowerCase() == json['stream'].toString().toLowerCase(),
+        orElse: () => StreamType.bca,
+      ),
       name: json['student_name'],
       mobileNo: json['mobile_no'],
       permanentMobileNo: json['permanent_mobile_no'],

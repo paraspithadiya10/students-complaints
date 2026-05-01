@@ -4,6 +4,7 @@ enum AppRoutes {
   home('/home'),
   studentList('/studentList'),
   studentDetail('/studentDetail'),
+  editStudentDetail('/editStudentDetail'),
   complaint('/complaint'),
   profile('/profile');
 

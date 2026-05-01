@@ -57,11 +57,19 @@ class StudentsInfoWidget extends ConsumerWidget {
                 crossAxisAlignment: .start,
                 children: [
                   Text(student.name, style: theme.textTheme.headlineSmall),
-                  Text(student.stream.toUpperCase()),
+                  Text(student.stream.name.toUpperCase()),
                 ],
               ),
               const Spacer(),
-              ZoeIconButtonWidget(icon: Icons.edit_outlined),
+              ZoeIconButtonWidget(
+                icon: Icons.edit_outlined,
+                onTap: () {
+                  context.pushNamed(
+                    AppRoutes.editStudentDetail.name,
+                    extra: student,
+                  );
+                },
+              ),
             ],
           ),
           const SizedBox(height: 16),

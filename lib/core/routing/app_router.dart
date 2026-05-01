@@ -5,6 +5,7 @@ import 'package:complaints/features/complaint/screens/complaint_screen.dart';
 import 'package:complaints/features/home/screens/home_screen.dart';
 import 'package:complaints/features/profile/screens/profile_screen.dart';
 import 'package:complaints/features/splash/screens/splash_screen.dart';
+import 'package:complaints/features/student_detail/screens/edit_student_detail.dart';
 import 'package:complaints/features/student_detail/screens/students_detail.dart';
 import 'package:complaints/features/student_list/models/student.dart';
 import 'package:complaints/features/student_list/screens/student_list_screen.dart';
@@ -57,6 +58,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: AppRoutes.studentDetail.name,
         builder: (context, state) =>
             StudentsDetailScreen(student: state.extra as Student),
+      ),
+
+      // Edit Student Detail route
+      GoRoute(
+        path: AppRoutes.editStudentDetail.route,
+        name: AppRoutes.editStudentDetail.name,
+        builder: (context, state) =>
+            EditStudentDetail(student: state.extra as Student),
       ),
 
       // Complaint route
