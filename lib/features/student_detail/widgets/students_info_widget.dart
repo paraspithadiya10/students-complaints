@@ -1,5 +1,6 @@
 import 'package:complaints/common/utils/common_utils.dart';
 import 'package:complaints/common/widgets/styled_content_container_widget.dart';
+import 'package:complaints/common/widgets/toolkit/zoe_icon_button_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/core/theme/colors/app_colors.dart';
@@ -59,6 +60,8 @@ class StudentsInfoWidget extends ConsumerWidget {
                   Text(student.stream.toUpperCase()),
                 ],
               ),
+              const Spacer(),
+              ZoeIconButtonWidget(icon: Icons.edit_outlined),
             ],
           ),
           const SizedBox(height: 16),
@@ -67,6 +70,8 @@ class StudentsInfoWidget extends ConsumerWidget {
             spacing: 5,
             children: [
               Text('SPU ID : ${student.spuId}'),
+              Text('Enrollment No : ${student.enrollmentNo}'),
+              Text('Admission Year : ${student.admissionYear}'),
               Text('Father Name : ${CommonUtils.getFatherName(student.name)}'),
               Text('Contact No : ${student.mobileNo}'),
               SizedBox(height: 10),

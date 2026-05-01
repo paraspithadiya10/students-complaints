@@ -52,32 +52,41 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
       body: SafeArea(
         child: MaxWidthWidget(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              StudentsInfoWidget(student: widget.student),
-              const SizedBox(height: 20),
-              if (state.isLoading)
-                Center(child: CircularProgressIndicator())
-              else if (state.complaints == null ||
-                  state.complaints!.isEmpty) ...[
-                Spacer(),
-                EmptyStateWidget(
-                  icon: Icons.file_copy_outlined,
-                  message: 'No Complaints Found !!',
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    StudentsInfoWidget(student: widget.student),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-                Spacer(),
-              ] else
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: state.complaints?.length ?? 0,
-                    separatorBuilder: (context, index) => SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      final data = state.complaints?[index];
-                      final color = CommonUtils.getColor(
-                        data?.severity ?? ComplaintSeverity.low,
-                      );
+              ),
 
-                      return Container(
+              if (state.isLoading)
+                const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (state.complaints == null || state.complaints!.isEmpty)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: EmptyStateWidget(
+                      icon: Icons.file_copy_outlined,
+                      message: 'No Complaints Found !!',
+                    ),
+                  ),
+                )
+              else
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final data = state.complaints?[index];
+                    final color = CommonUtils.getColor(
+                      data?.severity ?? ComplaintSeverity.low,
+                    );
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
@@ -90,23 +99,21 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
                             BoxShadow(
                               color: color.withValues(alpha: 0.1),
                               blurRadius: 12,
-                              spreadRadius: 0,
                               offset: const Offset(0, 4),
                             ),
                           ],
                         ),
                         child: Column(
-                          crossAxisAlignment: .start,
-                          spacing: 3,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Complaint : ${data?.complaint}'),
                             Text('Reported By : ${data?.reportedBy}'),
                             Text('Reported At : ${data?.complaintDate}'),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }, childCount: state.complaints?.length ?? 0),
                 ),
             ],
           ),
