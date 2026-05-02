@@ -46,10 +46,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           mainAxisAlignment: .center,
           spacing: 20,
           children: [
-            ProfileAvatar(
-              radius: 60,
-              initialImageUrl: null, // pass from DB if available
-            ),
+            ProfileAvatar(radius: 60, initialImageUrl: null),
             TextFormField(
               controller: usernameController,
               decoration: const InputDecoration(

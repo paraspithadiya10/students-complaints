@@ -1,4 +1,5 @@
 import 'package:complaints/common/utils/common_utils.dart';
+import 'package:complaints/common/utils/date_time_utils.dart';
 import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/state_widgets/empty_state_widget.dart';
@@ -34,7 +35,6 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final state = ref.watch(complaintListControllerProvider);
 
     return Scaffold(
@@ -84,16 +84,18 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
                       data?.severity ?? ComplaintSeverity.low,
                     );
 
+                    final date = data?.complaintDate.toString();
+
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
-                          color: theme.colorScheme.surface,
+                          color: color.withValues(alpha: 0.50),
                           border: Border.all(
-                            color: color.withValues(alpha: 0.50),
                             width: 2,
+                            color: color.withValues(alpha: 0.50),
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -108,7 +110,9 @@ class _StudentsDetailScreenState extends ConsumerState<StudentsDetailScreen> {
                           children: [
                             Text('Complaint : ${data?.complaint}'),
                             Text('Reported By : ${data?.reportedBy}'),
-                            Text('Reported At : ${data?.complaintDate}'),
+                            Text(
+                              'Reported At : ${DateTimeUtils.formatFromString(date!)}',
+                            ),
                           ],
                         ),
                       ),
