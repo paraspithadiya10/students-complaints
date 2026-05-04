@@ -24,15 +24,15 @@ class _SplashScreenState extends State<SplashScreen> {
     final pref = await SharedPreferences.getInstance();
     final isUserLoggedIn = pref.getBool(isLoggedIn);
 
-    await Future.delayed(const Duration(seconds: 2));
-
     if (!mounted) return;
 
-    if (isUserLoggedIn == true || isUserLoggedIn != null) {
-      context.go(AppRoutes.home.route);
-    } else {
-      context.go(AppRoutes.login.route);
-    }
+    // if (isUserLoggedIn == true) {
+    //   context.go(AppRoutes.home.route);
+    // } else {
+    //   context.go(AppRoutes.login.route);
+    // }
+
+    context.go(AppRoutes.login.route);
   }
 
   @override

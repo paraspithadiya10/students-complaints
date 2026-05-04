@@ -28,6 +28,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     super.initState();
     final state = ref.read(profileControllerProvider);
     debugPrint('${state.mobileNo}');
+    debugPrint('User Profile Url : ${state.avatarUrl}');
     usernameController.text = state.username ?? '';
     emailController.text = state.email ?? '';
     mobileController.text = state.mobileNo ?? '';
@@ -35,18 +36,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profile = ref.watch(profileControllerProvider);
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: ZoeAppBar(title: 'Profile'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: .center,
           spacing: 20,
           children: [
-            ProfileAvatar(radius: 60, initialImageUrl: null),
+            ProfileAvatar(
+              key: ValueKey(profile.id),
+              radius: 60,
+              initialImageUrl: profile.avatarUrl,
+            ),
             TextFormField(
               controller: usernameController,
               decoration: const InputDecoration(
@@ -125,6 +132,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               onPressed: () async {
                 final pref = await SharedPreferences.getInstance();
                 pref.setBool(isLoggedIn, false);
+
+                ref.invalidate(profileControllerProvider);
+
                 await Supabase.instance.client.auth.signOut();
 
                 if (!context.mounted) return;

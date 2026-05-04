@@ -29,13 +29,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     final profileState = ref.read(profileControllerProvider);
-    if (profileState.stream?.name != 'master') {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref
-            .read(studentListControllerProvider.notifier)
-            .getStudentList(profileState.stream!.name);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(studentListControllerProvider.notifier)
+          .getStudentList(profileState.stream!.name);
+    });
   }
 
   @override
@@ -43,10 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final profileState = ref.read(profileControllerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: ZoeAppBar(
-          showBackButton: false,
-          title: profileState.stream?.name == 'master' ? 'Streams' : 'Students',
-        ),
+        title: ZoeAppBar(showBackButton: false, title: 'Students'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -67,13 +62,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final state = ref.watch(studentListControllerProvider);
 
     final students = state.students ?? [];
-
-    if (profileState.stream?.name == 'master') {
-      return SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: StatsSectionWidget(),
-      );
-    }
 
     return SafeArea(
       child: MaxWidthWidget(

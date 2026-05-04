@@ -5,17 +5,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ProfileAvatar extends ConsumerStatefulWidget {
+class StudentAvatar extends ConsumerStatefulWidget {
+  final String? fileName;
   final double radius;
   final String? initialImageUrl;
 
-  const ProfileAvatar({super.key, this.radius = 50, this.initialImageUrl});
+  const StudentAvatar({
+    super.key,
+    this.fileName,
+    this.radius = 50,
+    this.initialImageUrl,
+  });
 
   @override
-  ConsumerState<ProfileAvatar> createState() => _ProfileAvatarState();
+  ConsumerState<StudentAvatar> createState() => _StudentAvatarState();
 }
 
-class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
+class _StudentAvatarState extends ConsumerState<StudentAvatar> {
   File? _image;
   bool _loading = false;
 
@@ -30,47 +36,45 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
 
       final user = supabase.auth.currentUser;
 
-      if (user == null) {
-        debugPrint("❌ User not logged in");
-        return;
-      }
-
-      setState(() {
-        _image = File(pickedFile.path);
-        _loading = true;
-      });
+      if (user == null) return;
 
       final fileExt = pickedFile.path.split('.').last;
-      final fileName = '${user.id}.$fileExt';
-      final filePath = 'avatars/$fileName';
 
-      // ✅ Upload to Supabase Storage
+      final finalFileName = widget.fileName != null
+          ? '${widget.fileName}.$fileExt'
+          : 'avatar.$fileExt';
+
+      final filePath = '${user.id}/$finalFileName';
+
+      // Upload
       await supabase.storage
-          .from('avatars')
+          .from('student_images')
           .upload(
             filePath,
             _image!,
             fileOptions: const FileOptions(upsert: true),
           );
 
-      // ✅ Get public URL
-      final publicUrl = supabase.storage.from('avatars').getPublicUrl(filePath);
+      // Get URL
+      final publicUrl = supabase.storage
+          .from('student_images')
+          .getPublicUrl(filePath);
 
-      debugPrint("✅ Uploaded URL: $publicUrl");
+      debugPrint("Uploaded URL: $publicUrl");
 
-      // ✅ Update DB (use UPDATE not UPSERT for safety)
+      // Update DB (use UPDATE not UPSERT for safety)
       final response = await supabase
-          .from('profiles')
-          .update({'avatar_url': publicUrl})
-          .eq('id', user.id)
+          .from('students')
+          .update({'image_url': publicUrl})
+          .eq('id', widget.fileName.toString())
           .select();
 
-      debugPrint("✅ DB Updated: $response");
+      debugPrint("DB Updated: $response");
 
-      // ✅ Refresh profile from provider
+      // Refresh profile from provider
       ref.read(profileControllerProvider.notifier).getProfile(user.id);
     } catch (e) {
-      debugPrint('❌ Upload error: $e');
+      debugPrint('Upload error: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -82,7 +86,7 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Cache buster (VERY IMPORTANT)
+    // Cache buster (VERY IMPORTANT)
     final imageUrl = widget.initialImageUrl != null
         ? "${widget.initialImageUrl}?t=${DateTime.now().millisecondsSinceEpoch}"
         : null;
@@ -103,10 +107,10 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
                 : null,
           ),
 
-          // 🔄 Loading indicator
+          // Loading indicator
           if (_loading) const CircularProgressIndicator(),
 
-          // ✏️ Edit icon
+          // ️ Edit icon
           Positioned(
             bottom: 0,
             right: 4,

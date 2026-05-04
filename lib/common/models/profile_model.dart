@@ -7,6 +7,7 @@ class Profile {
   final String? email;
   final StreamType? stream;
   final String? mobileNo;
+  final String? avatarUrl;
   final DateTime? createdAt;
   final bool? isLoading;
 
@@ -16,6 +17,7 @@ class Profile {
     this.email,
     this.stream,
     this.mobileNo,
+    this.avatarUrl,
     this.createdAt,
     this.isLoading,
   });
@@ -29,6 +31,7 @@ class Profile {
           ? StreamTypeExtension.fromJson(json['stream'])
           : null,
       mobileNo: json['mobile_no'],
+      avatarUrl: json['avatar_url'],
       createdAt: DateTime.parse(json['created_at']),
     );
   }
@@ -39,6 +42,7 @@ class Profile {
     String? email,
     StreamType? stream,
     String? mobileNo,
+    String? avatarUrl,
     DateTime? createdAt,
     bool? isLoading,
   }) {
@@ -48,6 +52,7 @@ class Profile {
       email: email ?? this.email,
       stream: stream ?? this.stream,
       mobileNo: mobileNo ?? this.mobileNo,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
       createdAt: createdAt ?? this.createdAt,
       isLoading: isLoading ?? this.isLoading,
     );
