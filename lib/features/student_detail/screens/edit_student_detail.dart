@@ -1,6 +1,7 @@
 import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
+import 'package:complaints/common/widgets/toolkit/zoe_icon_button_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/features/student_detail/widgets/student_avatar_widget.dart';
@@ -51,8 +52,70 @@ class _EditStudentDetailState extends ConsumerState<EditStudentDetail> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: ZoeAppBar(title: 'Student Detail'),
+        actions: [
+          Padding(
+            padding: EdgeInsetsGeometry.only(right: 10),
+            child: ZoeIconButtonWidget(
+              icon: Icons.save_outlined,
+              onTap: () async {
+                final supabase = Supabase.instance.client;
+
+                try {
+                  await supabase.rpc(
+                    'update_student',
+                    params: {
+                      'p_spu_id': spuIdController.text,
+                      'p_enrollment_no': enrollmentNoController.text,
+                      'p_student_name': nameController.text,
+                      'p_mobile_no': mobileNoController.text,
+                      'p_permanent_mobile_no': permanentMobileNoController.text,
+                      'p_alternate_mobile_no': alternateMobileNoController.text,
+                      'p_stream': selectedStream?.name,
+                      'p_admission_year': admissionYearController.text,
+                    },
+                  );
+
+                  if (!context.mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.green,
+                      content: Text(
+                        'Details Updated Successfully',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge!.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  );
+
+                  ref
+                      .read(studentListControllerProvider.notifier)
+                      .getStudentList(widget.student.stream.name);
+
+                  context.goNamed(AppRoutes.home.name);
+                } catch (e) {
+                  debugPrint('Error while updating students details : $e');
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text(
+                        'Error while updating students details $e',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge!.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
       body: MaxWidthWidget(
+        isScrollable: true,
         padding: EdgeInsets.only(right: 16, top: 16, left: 16),
         child: Column(
           spacing: 20,
@@ -145,63 +208,6 @@ class _EditStudentDetailState extends ConsumerState<EditStudentDetail> {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
               ),
-            ),
-            const Spacer(),
-            ZoeSecondaryButton(
-              text: 'Save',
-              onPressed: () async {
-                final supabase = Supabase.instance.client;
-
-                try {
-                  await supabase.rpc(
-                    'update_student',
-                    params: {
-                      'p_spu_id': spuIdController.text,
-                      'p_enrollment_no': enrollmentNoController.text,
-                      'p_student_name': nameController.text,
-                      'p_mobile_no': mobileNoController.text,
-                      'p_permanent_mobile_no': permanentMobileNoController.text,
-                      'p_alternate_mobile_no': alternateMobileNoController.text,
-                      'p_stream': selectedStream?.name,
-                      'p_admission_year': admissionYearController.text,
-                    },
-                  );
-
-                  if (!context.mounted) return;
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.green,
-                      content: Text(
-                        'Details Updated Successfully',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelLarge!.copyWith(color: Colors.white),
-                      ),
-                    ),
-                  );
-
-                  ref
-                      .read(studentListControllerProvider.notifier)
-                      .getStudentList(widget.student.stream.name);
-
-                  context.goNamed(AppRoutes.home.name);
-                } catch (e) {
-                  debugPrint('Error while updating students details : $e');
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.red,
-                      content: Text(
-                        'Error while updating students details $e',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelLarge!.copyWith(color: Colors.white),
-                      ),
-                    ),
-                  );
-                }
-              },
             ),
             const SizedBox(height: 20),
           ],

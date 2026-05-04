@@ -34,8 +34,12 @@ class _StudentAvatarState extends ConsumerState<StudentAvatar> {
 
       if (pickedFile == null) return;
 
-      final user = supabase.auth.currentUser;
+      setState(() {
+        _loading = true;
+        _image = File(pickedFile.path); // ✅ FIX
+      });
 
+      final user = supabase.auth.currentUser;
       if (user == null) return;
 
       final fileExt = pickedFile.path.split('.').last;
@@ -51,27 +55,19 @@ class _StudentAvatarState extends ConsumerState<StudentAvatar> {
           .from('student_images')
           .upload(
             filePath,
-            _image!,
+            _image!, // now safe ✅
             fileOptions: const FileOptions(upsert: true),
           );
 
-      // Get URL
       final publicUrl = supabase.storage
           .from('student_images')
           .getPublicUrl(filePath);
 
-      debugPrint("Uploaded URL: $publicUrl");
-
-      // Update DB (use UPDATE not UPSERT for safety)
-      final response = await supabase
+      await supabase
           .from('students')
           .update({'image_url': publicUrl})
-          .eq('id', widget.fileName.toString())
-          .select();
+          .eq('spu_id', widget.fileName.toString());
 
-      debugPrint("DB Updated: $response");
-
-      // Refresh profile from provider
       ref.read(profileControllerProvider.notifier).getProfile(user.id);
     } catch (e) {
       debugPrint('Upload error: $e');
