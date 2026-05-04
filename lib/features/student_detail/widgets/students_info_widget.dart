@@ -4,6 +4,7 @@ import 'package:complaints/common/widgets/toolkit/zoe_icon_button_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/core/theme/colors/app_colors.dart';
+import 'package:complaints/features/student_detail/widgets/student_avatar_widget.dart';
 import 'package:complaints/features/student_list/models/student.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,14 +45,23 @@ class StudentsInfoWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              StyledContentContainer(
-                size: 56,
-                primaryColor: theme.colorScheme.primary,
-                backgroundOpacity: 0.1,
-                borderOpacity: 0.10,
-                shadowOpacity: 0.06,
-                child: Text(student.name[0], style: TextStyle(fontSize: 24)),
-              ),
+              if (student.imageUrl?.isNotEmpty ?? false) ...[
+                StudentAvatar(
+                  fileName: student.spuId.toString(),
+                  radius: 30,
+                  initialImageUrl: student.imageUrl ?? '',
+                ),
+              ] else ...[
+                StyledContentContainer(
+                  size: 56,
+                  primaryColor: theme.colorScheme.primary,
+                  backgroundOpacity: 0.1,
+                  borderOpacity: 0.10,
+                  shadowOpacity: 0.06,
+                  child: Text(student.name[0], style: TextStyle(fontSize: 24)),
+                ),
+              ],
+
               const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: .start,

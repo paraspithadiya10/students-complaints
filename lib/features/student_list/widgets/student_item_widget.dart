@@ -2,6 +2,7 @@ import 'package:complaints/common/widgets/glassy_container_widget.dart';
 import 'package:complaints/common/widgets/styled_content_container_widget.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/core/theme/colors/app_colors.dart';
+import 'package:complaints/features/student_detail/widgets/student_avatar_widget.dart';
 import 'package:complaints/features/student_list/models/student.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,7 +70,15 @@ class StudentItemWidget extends ConsumerWidget {
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          _buildEmojiContainer(student.name[0], AppColors.gradientEnd, theme),
+          if (student.imageUrl?.isNotEmpty ?? false) ...[
+            StudentAvatar(
+              fileName: student.spuId.toString(),
+              radius: 30,
+              initialImageUrl: student.imageUrl ?? '',
+            ),
+          ] else ...[
+            _buildEmojiContainer(student.name[0], AppColors.gradientEnd, theme),
+          ],
           const SizedBox(width: 16),
           Expanded(child: _buildContentSection(student, theme)),
           const SizedBox(width: 12),

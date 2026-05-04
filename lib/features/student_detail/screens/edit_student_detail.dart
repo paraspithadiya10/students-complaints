@@ -123,7 +123,8 @@ class _EditStudentDetailState extends ConsumerState<EditStudentDetail> {
             StudentAvatar(
               fileName: widget.student.spuId.toString(),
               radius: 50,
-              initialImageUrl: null,
+              initialImageUrl: widget.student.imageUrl ?? '',
+              isEdit: true,
             ),
             TextFormField(
               controller: spuIdController,

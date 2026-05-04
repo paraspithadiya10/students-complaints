@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:complaints/common/providers/profile_controller_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,9 +23,9 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
   final _picker = ImagePicker();
   final supabase = Supabase.instance.client;
 
-  Future<void> _pickAndUpload() async {
+  Future<void> _pickAndUpload(ImageSource source) async {
     try {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await _picker.pickImage(source: source);
 
       if (pickedFile == null) return;
 
@@ -44,7 +45,6 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
       final fileName = '${user.id}.$fileExt';
       final filePath = 'avatars/$fileName';
 
-      // ✅ Upload to Supabase Storage
       await supabase.storage
           .from('avatars')
           .upload(
@@ -53,21 +53,14 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
             fileOptions: const FileOptions(upsert: true),
           );
 
-      // ✅ Get public URL
       final publicUrl = supabase.storage.from('avatars').getPublicUrl(filePath);
 
-      debugPrint("✅ Uploaded URL: $publicUrl");
-
-      // ✅ Update DB (use UPDATE not UPSERT for safety)
-      final response = await supabase
+      await supabase
           .from('profiles')
           .update({'avatar_url': publicUrl})
           .eq('id', user.id)
           .select();
 
-      debugPrint("✅ DB Updated: $response");
-
-      // ✅ Refresh profile from provider
       ref.read(profileControllerProvider.notifier).getProfile(user.id);
     } catch (e) {
       debugPrint('❌ Upload error: $e');
@@ -88,7 +81,7 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
         : null;
 
     return GestureDetector(
-      onTap: _loading ? null : _pickAndUpload,
+      onTap: _loading ? null : _showImageSourcePicker,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -97,7 +90,9 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
             backgroundColor: Colors.grey.shade300,
             backgroundImage: _image != null
                 ? FileImage(_image!)
-                : (imageUrl != null ? NetworkImage(imageUrl) : null),
+                : (imageUrl != null
+                      ? CachedNetworkImageProvider(imageUrl)
+                      : null),
             child: (_image == null && imageUrl == null)
                 ? Icon(Icons.person, size: widget.radius * 0.6)
                 : null,
@@ -118,6 +113,36 @@ class _ProfileAvatarState extends ConsumerState<ProfileAvatar> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showImageSourcePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickAndUpload(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickAndUpload(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

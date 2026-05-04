@@ -25,6 +25,7 @@ class StudentService {
 
       return ResponseModel(data: students, type: ResponseType.success);
     } catch (e) {
+      debugPrint("error student fetching : $e");
       return ResponseModel(data: null, type: ResponseType.exception);
     }
   }

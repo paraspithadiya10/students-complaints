@@ -9,6 +9,7 @@ class Student {
   final int permanentMobileNo;
   final int alternateMobileNo;
   final int admissionYear;
+  final String? imageUrl;
   final int highCount;
   final int mediumCount;
   final int lowCount;
@@ -22,6 +23,7 @@ class Student {
     required this.permanentMobileNo,
     required this.alternateMobileNo,
     required this.admissionYear,
+    required this.imageUrl,
     required this.highCount,
     required this.mediumCount,
     required this.lowCount,
@@ -40,6 +42,7 @@ class Student {
       permanentMobileNo: json['permanent_mobile_no'],
       alternateMobileNo: json['alternate_mobile_no'],
       admissionYear: json['admission_year'],
+      imageUrl: json['image_url'],
       highCount: json['high_count'],
       mediumCount: json['medium_count'],
       lowCount: json['low_count'],
