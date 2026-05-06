@@ -7,7 +7,6 @@ import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_icon_button_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_search_bar_widget.dart';
 import 'package:complaints/core/routing/app_routes.dart';
-import 'package:complaints/features/home/widgets/stats_section_widget.dart';
 import 'package:complaints/features/student_list/providers/student_list_controller_provider.dart';
 import 'package:complaints/features/student_list/widgets/student_item_widget.dart';
 import 'package:flutter/material.dart';

@@ -2,7 +2,6 @@ import 'package:complaints/common/utils/enum_utils.dart';
 import 'package:complaints/common/widgets/max_width_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_app_bar_widget.dart';
 import 'package:complaints/common/widgets/toolkit/zoe_icon_button_widget.dart';
-import 'package:complaints/common/widgets/toolkit/zoe_secondary_button.dart';
 import 'package:complaints/core/routing/app_routes.dart';
 import 'package:complaints/features/student_detail/widgets/student_avatar_widget.dart';
 import 'package:complaints/features/student_list/models/student.dart';

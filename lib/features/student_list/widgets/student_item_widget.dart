@@ -119,6 +119,16 @@ class StudentItemWidget extends ConsumerWidget {
         if (!isCompact) ...[
           const SizedBox(height: 4),
           Text(
+            student.stream.name.toUpperCase(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+              height: 1.3,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
             student.spuId.toString(),
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
